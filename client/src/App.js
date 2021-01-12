@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { getLoggedInUser, logout } from './auth';
-import Chat from './Chat.class';
+import Chat from './Chat';
 import Login from './Login';
 import NavBar from './NavBar';
 import client from './graphql/client';

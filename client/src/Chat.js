@@ -1,19 +1,44 @@
 import React, { useState } from 'react';
-import { addMessage, getMessages, onMessageAdded } from './graphql/queries';
+import { messagesQuery, addMessageMutation } from './graphql/queries';
+import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks';
+import { addMessage, getMessages, onMessageAdded, messageAddedSubscription } from './graphql/queries';
 import MessageInput from './MessageInput';
 import MessageList from './MessageList';
 
 const Chat = ({user}) => {
+  const [messages, setMessages] = useState([]);
+
+  // renedered once undefined then again with data
+  // loading property
+    const {loading, error } = useQuery(messagesQuery, {
+      onCompleted: ({messages}) => setMessages(messages)
+    }); // {variables, fetchPolicy: '..'}
+    
+    useSubscription(messageAddedSubscription, {
+      onSubscriptionData: ({subscriptionData}) => {
+        setMessages(messages.concat(subscriptionData.data.messageAdded));
+      }
+    });
+    
+    const [addMessage, {loadingMutation, errorMutation}] = useMutation(addMessageMutation);
+
     // dont call hooks inside loops, conditions or nested functions
     // call hooks from react function components
     // call hooks from custom hooks
-    const [messages, setMessages] = useState([]);
+    // const [messages, setMessages] = useState([]);
 
-    const handleSend = (text) => {
-        const message = {id: text, from: 'you', text};
-        setMessages(messages.concat(message));
-        await addMessage(text);
+    const handleSend = async (text) => {
+        await addMessage({variables: {input: {text}}});
+
       }
+
+    if (loading) {
+      return <div>Loading</div>;
+    }
+
+    if(error) {
+      return <div>Error</div>;
+    }
 
     return (
         <section className="section">
