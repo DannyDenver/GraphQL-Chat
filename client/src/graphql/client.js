@@ -1,7 +1,7 @@
 import {
   ApolloClient, ApolloLink, HttpLink, InMemoryCache, split
-} from 'apollo-boost';
-import { WebSocketLink } from 'apollo-link-ws';
+} from '@apollo/client/core';
+import { WebSocketLink } from '@apollo/client/link/ws';
 import { getAccessToken } from '../auth';
 import {getMainDefinition} from 'apollo-utilities';
 
