@@ -20,7 +20,10 @@ const httpLink = ApolloLink.from([
 ]);
 
 const wsLink = new WebSocketLink({uri: wsUrl, options: {
-  /// only websocket when needed
+  /// pass function when values can change over time, ie logged in, latest values
+  connectionParams: () => ({
+    accessToken: getAccessToken()
+  }), 
   lazy: true,
   reconnect: true  
   }
