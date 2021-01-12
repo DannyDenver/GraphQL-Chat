@@ -12,6 +12,10 @@ type Message {
   text: String
 }
 
+type Subscription {
+  messageAdded: Message
+}
+
 input MessageInput {
   text: String
 }
